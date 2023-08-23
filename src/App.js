@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import UserCard from "./components/USerCard";
+import "./style.css";
+import Heading from "./components/Heading";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+function App(){
+
+  const [users,setUsers] = useState([]);
+
+  async function getUsers(){
+    let data = await fetch("https://api.github.com/users");
+
+    data=await data.json();
+    setUsers(data)
+    console.log(data)
+  }
+
+  useEffect(()=>{
+    getUsers();
+  },[])
+
+  return(
+    <>
+    <Heading/>
+    <div className="card-container">
+    {
+      users.map((user)=><UserCard key={user.id} name={user.login} imageLink={user.avatar_url} followers={user.followers_url}/>)
+    }
     </div>
-  );
+    </>
+  )  
+
+  
 }
+
 
 export default App;
